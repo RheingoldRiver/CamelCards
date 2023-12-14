@@ -26,9 +26,9 @@ function PreferencesToolbar() {
         Cheat?
       </Toggle.Root>
 
-      <Toolbar.Separator className="ToolbarSeparator" />
+      <Toolbar.Separator className="inline" />
       <Toolbar.Button className="ToolbarButton" style={{ marginLeft: "auto" }}>
-        Play game!
+        New game
       </Toolbar.Button>
     </Toolbar.Root>
   );
