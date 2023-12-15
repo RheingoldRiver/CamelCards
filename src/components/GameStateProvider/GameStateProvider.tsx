@@ -2,6 +2,7 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "re
 import { Hand } from "../../constants";
 import { DEFAULT_NUM_CARDS_PER_HAND, DEFAULT_NUM_HANDS_PER_GAME } from "../../constants";
 import { generateHands } from "../../gameHelpers";
+import { produce } from "immer";
 
 interface GameState {
   useJokers: boolean;
@@ -18,6 +19,7 @@ interface GameState {
   scores: number[];
   setScores: Dispatch<SetStateAction<number[]>>;
   newHands: () => void;
+  swapBids: (i1: number, i2: number) => void;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -35,6 +37,7 @@ const DEFAULT_GAME_STATE: GameState = {
   scores: [],
   setScores: () => {},
   newHands: () => {},
+  swapBids: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -58,6 +61,16 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setHands(generateHands(numHandsPerGame, numCardsPerHand));
   }
 
+  function swapBids(i1: number, i2: number) {
+    setHands(
+      produce(hands, (nextHands) => {
+        const temp = nextHands[i1].bid;
+        nextHands[i1].bid = nextHands[i2].bid;
+        nextHands[i2].bid = temp;
+      })
+    );
+  }
+
   return (
     <GameStateContext.Provider
       value={{
@@ -75,6 +88,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         scores,
         setScores,
         newHands,
+        swapBids,
       }}
     >
       {children}

@@ -4,11 +4,15 @@ export interface Card {
   value: number;
 }
 
-export interface Hand {
+export interface Bid {
   bid: number;
+  key: string;
+}
+
+export interface Hand {
+  bid: Bid;
   cards: Card[];
-  bidKey: string;
-  cardsKey: string;
+  key: string;
 }
 
 export const MIN_ALLOWED_BID = 1;

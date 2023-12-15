@@ -5,7 +5,7 @@ import { Card } from "./constants";
 
 export function maxPossibleScore(hands: Hand[]) {
   return hands
-    .map((x) => x.bid)
+    .map((x) => x.bid.bid)
     .sort()
     .reverse()
     .reduce((acc, bid, i) => {
@@ -38,14 +38,16 @@ export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
   sortedHands.sort((a, b) => {
     return score(a.cards) - score(b.cards);
   });
-  return sortedHands.reduce((acc, hand, i) => acc + (i + 1) * hand.bid, 0);
+  return sortedHands.reduce((acc, hand, i) => acc + (i + 1) * hand.bid.bid, 0);
 }
 
 export function generateHands(numHands: number, numCardsPerHand: number): Hand[] {
   return range(numHands).map(() => ({
-    bid: random(MIN_ALLOWED_BID, MAX_ALLOWED_BID),
-    bidKey: crypto.randomUUID(),
-    cardsKey: crypto.randomUUID(),
+    bid: {
+      bid: random(MIN_ALLOWED_BID, MAX_ALLOWED_BID),
+      key: crypto.randomUUID(),
+    },
+    key: crypto.randomUUID(),
     cards: range(numCardsPerHand).map(() => sample(values(POSSIBLE_CARDS)) as Card),
   }));
 }
