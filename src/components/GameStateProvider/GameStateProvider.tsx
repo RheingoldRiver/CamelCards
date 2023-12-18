@@ -1,7 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
 import { Hand } from "../../constants";
 import { DEFAULT_NUM_CARDS_PER_HAND, DEFAULT_NUM_HANDS_PER_GAME } from "../../constants";
-import { generateHands } from "../../gameHelpers";
+import { actualScore, generateHands } from "../../gameHelpers";
 import { produce } from "immer";
 
 interface GameState {
@@ -22,6 +22,8 @@ interface GameState {
   swapBids: (i1: number, i2: number) => void;
   modalOpen: boolean;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
+  addedScore: boolean;
+  removedScore: boolean;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -42,6 +44,8 @@ const DEFAULT_GAME_STATE: GameState = {
   swapBids: () => {},
   modalOpen: false,
   setModalOpen: () => {},
+  addedScore: false,
+  removedScore: false,
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -56,6 +60,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     return generateHands(numHandsPerGame, numCardsPerHand);
   });
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [addedScore, setAddedScore] = useState<boolean>(false);
+  const [removedScore, setRemovedScore] = useState<boolean>(false);
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }
@@ -69,13 +75,24 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   }
 
   function swapBids(i1: number, i2: number) {
-    setHands(
-      produce(hands, (nextHands) => {
-        const temp = nextHands[i1].bid;
-        nextHands[i1].bid = nextHands[i2].bid;
-        nextHands[i2].bid = temp;
-      })
-    );
+    const nextHands = produce(hands, (draftHands) => {
+      const temp = draftHands[i1].bid;
+      draftHands[i1].bid = draftHands[i2].bid;
+      draftHands[i2].bid = temp;
+    });
+    const delta = actualScore(nextHands, useJokers, allowCheat) - actualScore(hands, useJokers, allowCheat);
+    if (delta > 0) {
+      setAddedScore(true);
+      setTimeout(() => {
+        setAddedScore(false);
+      }, 2500);
+    } else if (delta < 0) {
+      setRemovedScore(true);
+      setTimeout(() => {
+        setRemovedScore(false);
+      }, 2500);
+    }
+    setHands(nextHands);
   }
 
   return (
@@ -98,6 +115,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         swapBids,
         modalOpen,
         setModalOpen,
+        addedScore,
+        removedScore,
       }}
     >
       {children}

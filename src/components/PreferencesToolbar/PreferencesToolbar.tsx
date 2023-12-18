@@ -3,6 +3,7 @@ import * as Toggle from "@radix-ui/react-toggle";
 import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 
 function PreferencesToolbar() {
   const { useJokers, toggleUseJokers, allowCheat, toggleAllowCheat, newHands, setShowCards } =
@@ -68,7 +69,15 @@ const ToggleStatus = ({ status }: { status: boolean }) => {
         "border border-solid border-gray-300 rounded-[3em]"
       )}
     >
-      <span className={clsx("rounded-[300px] w-6 h-6", status ? "bg-green-700" : "bg-gray-300")}></span>
+      <motion.span
+        className={clsx("rounded-[300px] w-6 h-6", status ? "bg-green-700" : "bg-gray-300")}
+        layout="position"
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 30,
+        }}
+      ></motion.span>
     </span>
   );
 };

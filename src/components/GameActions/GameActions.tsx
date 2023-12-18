@@ -1,23 +1,40 @@
-import { useContext, type FC } from "react";
+import { useContext, type FC, ReactNode } from "react";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { actualScore } from "../../gameHelpers";
 import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {}
 
 const GameActions: FC<Props> = () => {
-  const { scores, setScores, newHands, showCards, setShowCards, hands, useJokers, allowCheat, setModalOpen } =
-    useContext(GameStateContext);
+  const {
+    scores,
+    setScores,
+    newHands,
+    showCards,
+    setShowCards,
+    hands,
+    useJokers,
+    allowCheat,
+    setModalOpen,
+    addedScore,
+    removedScore,
+  } = useContext(GameStateContext);
   return (
     <Toolbar.Root className="my-2" aria-label="Formatting options">
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
         Total score: {scores.reduce((acc, s) => acc + s, 0)}
       </span>
-      <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
+      <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
+        <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
+          <AnimatedScoreChange show={removedScore}>---</AnimatedScoreChange>
+        </span>
         Current score: {actualScore(hands, useJokers, allowCheat)}
+        <span className={clsx("absolute top-[-14px] right-[-10px] text-green-800 bold", "text-2xl")}>
+          <AnimatedScoreChange show={addedScore}>+++</AnimatedScoreChange>
+        </span>
       </span>
-      <Toolbar.Separator className="inline" />
       <Toolbar.Button
         className={clsx(
           showCards ? "bg-sand-300 text-sand-100" : "bg-sand-400",
@@ -42,3 +59,15 @@ const GameActions: FC<Props> = () => {
 };
 
 export default GameActions;
+
+const AnimatedScoreChange = ({ show, children }: { show: boolean; children: ReactNode }) => {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 1 }} transition={{ duration: 1 }}>
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
