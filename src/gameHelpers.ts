@@ -7,7 +7,6 @@ export function maxPossibleScore(hands: Hand[]) {
   return hands
     .map((x) => x.bid.bid)
     .sort()
-    .reverse()
     .reduce((acc, bid, i) => {
       return acc + (i + 1) * bid;
     }, 0);
