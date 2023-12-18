@@ -17,7 +17,7 @@ export interface Hand {
 
 export const MIN_ALLOWED_BID = 1;
 
-export const MAX_ALLOWED_BID = 1000;
+export const MAX_ALLOWED_BID = 100;
 
 export const DEFAULT_NUM_CARDS_PER_HAND = 5;
 
