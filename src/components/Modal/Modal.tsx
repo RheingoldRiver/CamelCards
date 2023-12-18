@@ -26,7 +26,7 @@ export const Modal = ({
         <Dialog.Content
           onOpenAutoFocus={onOpenAutoFocus}
           className={clsx(
-            "bg-gray-300",
+            "bg-sand-200",
             "rounded-lg pt-8 pb-0 shadow-md shadow-sand-500",
             "fixed top-[5vw] left-[5vw] sm:top-1/2 sm:left-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%]",
             "max-h-[90vh] w-[min(90vw,_40rem)]",
