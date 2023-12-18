@@ -21,6 +21,7 @@ function PreferencesToolbar() {
         aria-label="Toggle jokers"
         pressed={useJokers}
         onPressedChange={toggleUseJokers}
+        title="Use Jokers instead of Jacks"
       >
         <ToggleStatus status={useJokers} />
         Jokers
@@ -36,6 +37,7 @@ function PreferencesToolbar() {
         aria-label="Toggle jokers"
         pressed={allowCheat}
         onPressedChange={toggleAllowCheat}
+        title="Simulate subtly sorting each hand"
       >
         <ToggleStatus status={allowCheat} />
         Cheat?
