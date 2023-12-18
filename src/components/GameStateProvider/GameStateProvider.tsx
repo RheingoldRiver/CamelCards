@@ -22,8 +22,8 @@ interface GameState {
   swapBids: (i1: number, i2: number) => void;
   modalOpen: boolean;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
-  addedScore: boolean;
-  removedScore: boolean;
+  addedScore: number;
+  removedScore: number;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -44,8 +44,8 @@ const DEFAULT_GAME_STATE: GameState = {
   swapBids: () => {},
   modalOpen: false,
   setModalOpen: () => {},
-  addedScore: false,
-  removedScore: false,
+  addedScore: 0,
+  removedScore: 0,
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -60,8 +60,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     return generateHands(numHandsPerGame, numCardsPerHand);
   });
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [addedScore, setAddedScore] = useState<boolean>(false);
-  const [removedScore, setRemovedScore] = useState<boolean>(false);
+  const [addedScore, setAddedScore] = useState<number>(0);
+  const [removedScore, setRemovedScore] = useState<number>(0);
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }
@@ -82,14 +82,16 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     });
     const delta = actualScore(nextHands, useJokers, allowCheat) - actualScore(hands, useJokers, allowCheat);
     if (delta > 0) {
-      setAddedScore(true);
+      setAddedScore(1 + addedScore);
+      setRemovedScore(0);
       setTimeout(() => {
-        setAddedScore(false);
+        setAddedScore(0);
       }, 2500);
     } else if (delta < 0) {
-      setRemovedScore(true);
+      setRemovedScore(1 + removedScore);
+      setAddedScore(0);
       setTimeout(() => {
-        setRemovedScore(false);
+        setRemovedScore(0);
       }, 2500);
     }
     setHands(nextHands);

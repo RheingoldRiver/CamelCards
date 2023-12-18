@@ -77,6 +77,7 @@ const ToggleStatus = ({ status }: { status: boolean }) => {
           stiffness: 500,
           damping: 30,
         }}
+        initial={false}
       ></motion.span>
     </span>
   );

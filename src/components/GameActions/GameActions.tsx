@@ -60,11 +60,18 @@ const GameActions: FC<Props> = () => {
 
 export default GameActions;
 
-const AnimatedScoreChange = ({ show, children }: { show: boolean; children: ReactNode }) => {
+const AnimatedScoreChange = ({ show, children }: { show: number; children: ReactNode }) => {
   return (
     <AnimatePresence>
-      {show && (
-        <motion.div initial={{ scale: 0.5 }} animate={{ scale: 1 }} exit={{ scale: 1 }} transition={{ duration: 1 }}>
+      {show > 0 && (
+        <motion.div
+          initial={{ scale: 0.5 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 1 }}
+          transition={{ duration: 0.5 }}
+          key={show}
+          layout="size"
+        >
           {children}
         </motion.div>
       )}
