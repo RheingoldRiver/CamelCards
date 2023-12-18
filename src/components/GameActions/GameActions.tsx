@@ -7,7 +7,8 @@ import clsx from "clsx";
 interface Props {}
 
 const GameActions: FC<Props> = () => {
-  const { scores, setScores, newHands, setShowCards, hands, useJokers, allowCheat } = useContext(GameStateContext);
+  const { scores, setScores, newHands, showCards, setShowCards, hands, useJokers, allowCheat, setModalOpen } =
+    useContext(GameStateContext);
   return (
     <Toolbar.Root className="my-2" aria-label="Formatting options">
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
@@ -19,13 +20,16 @@ const GameActions: FC<Props> = () => {
       <Toolbar.Separator className="inline" />
       <Toolbar.Button
         className={clsx(
-          "bg-sand-400 p-2 rounded-xl",
-          "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
+          showCards ? "bg-sand-300 text-sand-100" : "bg-sand-400",
+          "p-2 rounded-xl",
+          showCards ? "" : "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
           "mx-2",
           "h-10"
         )}
         style={{ marginLeft: "auto" }}
         onClick={() => {
+          setModalOpen(true);
+          if (showCards) return;
           setShowCards(true);
           setScores([...scores, actualScore(hands, useJokers, allowCheat)]);
           newHands();

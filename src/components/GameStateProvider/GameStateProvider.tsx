@@ -20,6 +20,8 @@ interface GameState {
   setScores: Dispatch<SetStateAction<number[]>>;
   newHands: () => void;
   swapBids: (i1: number, i2: number) => void;
+  modalOpen: boolean;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -38,6 +40,8 @@ const DEFAULT_GAME_STATE: GameState = {
   setScores: () => {},
   newHands: () => {},
   swapBids: () => {},
+  modalOpen: false,
+  setModalOpen: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -51,6 +55,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [hands, setHands] = useState<Hand[]>(() => {
     return generateHands(numHandsPerGame, numCardsPerHand);
   });
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }
@@ -91,6 +96,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setScores,
         newHands,
         swapBids,
+        modalOpen,
+        setModalOpen,
       }}
     >
       {children}

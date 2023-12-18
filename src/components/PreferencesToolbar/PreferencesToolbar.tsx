@@ -5,7 +5,8 @@ import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import clsx from "clsx";
 
 function PreferencesToolbar() {
-  const { useJokers, toggleUseJokers, allowCheat, toggleAllowCheat, newHands } = useContext(GameStateContext);
+  const { useJokers, toggleUseJokers, allowCheat, toggleAllowCheat, newHands, setShowCards } =
+    useContext(GameStateContext);
   return (
     <Toolbar.Root className="flex flex-row justify-start items-center" aria-label="Formatting options">
       <Toggle.Root
@@ -47,7 +48,10 @@ function PreferencesToolbar() {
           "h-10",
           "inline-flex flex-row items-center"
         )}
-        onClick={newHands}
+        onClick={() => {
+          newHands();
+          setShowCards(false);
+        }}
       >
         Generate new hands
       </Toolbar.Button>

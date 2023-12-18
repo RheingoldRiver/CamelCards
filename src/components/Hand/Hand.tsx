@@ -48,7 +48,8 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
 };
 
 const CardDisplay = ({ card }: { card: Card }) => {
-  return <div className={clsx("")}>{card.display}</div>;
+  const { showCards } = useContext(GameStateContext);
+  return <div className={clsx("")}>{showCards ? card.display : "?"}</div>;
 };
 
 export default HandDisplay;
