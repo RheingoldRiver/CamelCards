@@ -7,10 +7,13 @@ import { Card, Hand } from "../../constants";
 const BID_DRAG_TYPE = "__bid";
 
 const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
-  const { hands, swapBids } = useContext(GameStateContext);
-  const [, dragRef] = useDrag(() => ({
+  const { hands, swapBids, showCards } = useContext(GameStateContext);
+  const [{ isSource }, dragRef] = useDrag(() => ({
     type: BID_DRAG_TYPE,
     item: { i: index },
+    collect: (monitor) => ({
+      isSource: !!monitor.isDragging(),
+    }),
   }));
 
   const [{ isHovered }, dropRef] = useDrop(
@@ -28,10 +31,11 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
 
   return (
     <div
-      ref={(node) => dragRef(dropRef(node))}
+      ref={showCards ? undefined : (node) => dragRef(dropRef(node))}
       className={clsx(
-        "cursor-grab p2 p-3 rounded-md",
-        isHovered ? "bg-yellow-300" : "bg-sand-100",
+        showCards ? "" : "cursor-grab",
+        "p2 p-3 rounded-md",
+        isHovered ? "bg-green-300" : isSource ? "bg-yellow-300" : "bg-sand-100",
         "w-[16em]",
         "grid grid-areas-hand"
       )}
