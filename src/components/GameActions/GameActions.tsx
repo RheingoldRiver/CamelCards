@@ -3,7 +3,7 @@ import * as Toolbar from "@radix-ui/react-toolbar";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { actualScore } from "../../gameHelpers";
 import clsx from "clsx";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface Props {}
 
@@ -28,11 +28,19 @@ const GameActions: FC<Props> = () => {
       </span>
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
         <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
-          <AnimatedScoreChange show={removedScore}>---</AnimatedScoreChange>
+          {removedScore > 0 && (
+            <AnimatedScoreChange translation={10} show={removedScore}>
+              ---
+            </AnimatedScoreChange>
+          )}
         </span>
-        Current score: {actualScore(hands, useJokers, allowCheat)}
+        Current score: {actualScore(hands, useJokers, allowCheat)}{" "}
         <span className={clsx("absolute top-[-14px] right-[-10px] text-green-800 bold", "text-2xl")}>
-          <AnimatedScoreChange show={addedScore}>+++</AnimatedScoreChange>
+          {addedScore > 0 && (
+            <AnimatedScoreChange translation={-10} show={addedScore}>
+              +++
+            </AnimatedScoreChange>
+          )}
         </span>
       </span>
       <Toolbar.Button
@@ -60,21 +68,28 @@ const GameActions: FC<Props> = () => {
 
 export default GameActions;
 
-const AnimatedScoreChange = ({ show, children }: { show: number; children: ReactNode }) => {
+const AnimatedScoreChange = ({
+  show,
+  translation,
+  children,
+}: {
+  show: number;
+  translation: number;
+  children: ReactNode;
+}) => {
   return (
-    <AnimatePresence>
-      {show > 0 && (
-        <motion.div
-          initial={{ scale: 0.5 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 1 }}
-          transition={{ duration: 0.5 }}
-          key={show}
-          layout="size"
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      initial={{ scale: 0.5 }}
+      animate={{ scale: 1, translateY: translation }}
+      exit={{ scale: 1 }}
+      transition={{ duration: 0.5 }}
+      key={show}
+      layout="size"
+      style={{
+        transformOrigin: "center bottom",
+      }}
+    >
+      {children}
+    </motion.div>
   );
 };

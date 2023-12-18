@@ -62,6 +62,12 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [addedScore, setAddedScore] = useState<number>(0);
   const [removedScore, setRemovedScore] = useState<number>(0);
+  const [scoreRemoveTimeout, setScoreRemoveTimeout] = useState<ReturnType<typeof setTimeout>>(() => {
+    return setTimeout(() => {}, 0);
+  });
+  const [scoreAddTimeout, setScoreAddTimeout] = useState<ReturnType<typeof setTimeout>>(() => {
+    return setTimeout(() => {}, 0);
+  });
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }
@@ -84,15 +90,21 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     if (delta > 0) {
       setAddedScore(1 + addedScore);
       setRemovedScore(0);
-      setTimeout(() => {
-        setAddedScore(0);
-      }, 2500);
+      clearTimeout(scoreAddTimeout);
+      setScoreAddTimeout(
+        setTimeout(() => {
+          setAddedScore(0);
+        }, 2000)
+      );
     } else if (delta < 0) {
       setRemovedScore(1 + removedScore);
       setAddedScore(0);
-      setTimeout(() => {
-        setRemovedScore(0);
-      }, 2500);
+      clearTimeout(scoreRemoveTimeout);
+      setScoreRemoveTimeout(
+        setTimeout(() => {
+          setRemovedScore(0);
+        }, 2000)
+      );
     }
     setHands(nextHands);
   }
