@@ -47,8 +47,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [numHandsPerGame, setNumHandsPerGame] = useState<number>(DEFAULT_NUM_HANDS_PER_GAME);
   const [allowCheat, setAllowCheat] = useState<boolean>(false);
   const [showCards, setShowCards] = useState<boolean>(false);
-  const [hands, setHands] = useState<Hand[]>([]);
   const [scores, setScores] = useState<number[]>([]);
+  const [hands, setHands] = useState<Hand[]>(() => {
+    return generateHands(numHandsPerGame, numCardsPerHand);
+  });
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }

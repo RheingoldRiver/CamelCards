@@ -7,30 +7,66 @@ import clsx from "clsx";
 function PreferencesToolbar() {
   const { useJokers, toggleUseJokers, allowCheat, toggleAllowCheat, newHands } = useContext(GameStateContext);
   return (
-    <Toolbar.Root className="ToolbarRoot" aria-label="Formatting options">
+    <Toolbar.Root className="flex flex-row justify-start items-center" aria-label="Formatting options">
       <Toggle.Root
-        className={clsx("p-2 border border-solid border-gray-900", useJokers ? "bg-green-500" : "bg-gray-200")}
+        className={clsx(
+          "bg-sand-400 p-2 rounded-xl",
+          "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
+          "mx-2",
+          "h-10",
+          "inline-flex flex-row items-center"
+        )}
         aria-label="Toggle jokers"
         pressed={useJokers}
         onPressedChange={toggleUseJokers}
       >
+        <ToggleStatus status={useJokers} />
         Jokers
       </Toggle.Root>
       <Toggle.Root
-        className={clsx("p-2 border border-solid border-gray-900", allowCheat ? "bg-green-500" : "bg-gray-200")}
+        className={clsx(
+          "bg-sand-400 p-2 rounded-xl",
+          "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
+          "mx-2",
+          "h-10",
+          "inline-flex flex-row items-center"
+        )}
         aria-label="Toggle jokers"
         pressed={allowCheat}
         onPressedChange={toggleAllowCheat}
       >
+        <ToggleStatus status={allowCheat} />
         Cheat?
       </Toggle.Root>
 
-      <Toolbar.Separator className="inline" />
-      <Toolbar.Button className="ToolbarButton" style={{ marginLeft: "auto" }} onClick={newHands}>
+      <Toolbar.Button
+        className={clsx(
+          "bg-sand-400 p-2 rounded-xl",
+          "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
+          "mx-2",
+          "h-10",
+          "inline-flex flex-row items-center"
+        )}
+        onClick={newHands}
+      >
         Generate new hands
       </Toolbar.Button>
     </Toolbar.Root>
   );
 }
+
+const ToggleStatus = ({ status }: { status: boolean }) => {
+  return (
+    <span
+      className={clsx(
+        "w-12 h-6 inline-flex flex-row",
+        status ? "justify-end" : "justify-start",
+        "border border-solid border-gray-300 rounded-[3em]"
+      )}
+    >
+      <span className={clsx("rounded-[300px] w-6 h-6", status ? "bg-green-700" : "bg-gray-300")}></span>
+    </span>
+  );
+};
 
 export default PreferencesToolbar;

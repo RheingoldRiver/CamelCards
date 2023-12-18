@@ -3,32 +3,24 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      colors: {
+        sand: {
+          50: "#fbf8ef",
+          100: "#f4ebd1",
+          200: "#e9d69e",
+          300: "#dfc074",
+          400: "#d5a64a",
+          500: "#cc8b34",
+          600: "#b46c2b",
+          700: "#965127",
+          800: "#7b4125",
+          900: "#653622",
+          950: "#391c0f",
+        },
+      },
       gridTemplateAreas: {
-        game: [
-          "settings settings .",
-          "wordmark wordmark wordmark",
-          "header header header",
-          ". gameToolbar .",
-          ". board .",
-          ". botToolbar .",
-          "footer footer footer",
-        ],
-        gamexl: [
-          "wordmark wordmark settings",
-          ". header .",
-          ". gameToolbar .",
-          ". board .",
-          ". botToolbar .",
-          "footer footer footer",
-        ],
-        game2xl: [
-          "wordmark wordmark settings",
-          ". header .",
-          ". gameToolbar .",
-          ". board .",
-          ". botToolbar .",
-          "footer footer footer",
-        ],
+        game: ["board bids", "actions bids", "prefs prefs"],
+        hand: ["cards index", "bid bid"],
       },
       gridTemplateColumns: {
         game: "auto max-content auto",
@@ -44,5 +36,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@savvywombat/tailwindcss-grid-areas")],
 };
