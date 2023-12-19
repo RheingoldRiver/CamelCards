@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import clsx from "clsx";
 import { useDrag, useDrop } from "react-dnd";
@@ -8,18 +8,33 @@ const BID_DRAG_TYPE = "__bid";
 
 const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
   const { hands, swapBids, showCards } = useContext(GameStateContext);
+  const [fadeAnimation, setFadeAnimation] = useState<boolean>(false);
+  function enableFade() {
+    setFadeAnimation(true);
+    setTimeout(() => {
+      setFadeAnimation(false);
+    }, 2000);
+  }
   const [{ isSource }, dragRef] = useDrag(() => ({
     type: BID_DRAG_TYPE,
     item: { i: index },
-    collect: (monitor) => ({
-      isSource: !!monitor.isDragging(),
-    }),
+    collect: (monitor) => {
+      return {
+        isSource: !!monitor.isDragging(),
+      };
+    },
+    end: (_item, monitor) => {
+      if (monitor.didDrop()) {
+        enableFade();
+      }
+    },
   }));
 
   const [{ isHovered }, dropRef] = useDrop(
     () => ({
       accept: BID_DRAG_TYPE,
       drop: ({ i }: { i: number }) => {
+        enableFade();
         swapBids(i, index);
       },
       collect: (monitor) => ({
@@ -39,6 +54,10 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
         "w-[16em]",
         "grid grid-areas-hand"
       )}
+      style={{
+        transform: isHovered ? "scale(1.1)" : "",
+        transition: "transform 250ms",
+      }}
     >
       <span className={clsx("grid-in-index flex flex-row justify-end align-start")}>{index + 1}</span>
       <div className={clsx("flex flex-row")}>
@@ -46,7 +65,19 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
           <CardDisplay key={`${hand.key}_${i}`} card={card} />
         ))}
       </div>
-      <div className={clsx()}>Bid: {hand.bid.bid}</div>
+      <div
+        className={clsx(
+          isHovered ? "bg-green-500" : isSource ? "bg-yellow-500" : "bg-sand-100",
+          "w-[16em]",
+          "w-[fit-content] rounded-xl px-1"
+        )}
+        style={{
+          transform: isHovered ? "scale(1.1)" : "",
+          transition: fadeAnimation ? "background 2000ms, transform 500ms" : "transform 250ms",
+        }}
+      >
+        Bid: {hand.bid.bid}
+      </div>
     </div>
   );
 };
