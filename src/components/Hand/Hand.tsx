@@ -17,9 +17,9 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
       setFadeAnimation(false);
     }, 2000);
   }
-  const [{ isSource }, dragRef] = useDrag(() => ({
-    type: BID_DRAG_TYPE,
+  const [{ isSource }, dragRef, preview] = useDrag(() => ({
     item: { i: index },
+    type: BID_DRAG_TYPE,
     collect: (monitor) => {
       return {
         isSource: !!monitor.isDragging(),
@@ -68,6 +68,7 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
         ))}
       </div>
       <div
+        ref={preview}
         className={clsx(
           isHovered ? "bg-green-500" : isSource ? "bg-yellow-500" : "bg-sand-100",
           "w-[16em]",
