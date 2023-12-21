@@ -15,7 +15,7 @@ export interface Hand {
   key: string;
 }
 
-export interface Hand {
+export interface HandType {
   name: string;
   value: number;
 }
@@ -27,6 +27,8 @@ export const MAX_ALLOWED_BID = 100;
 export const DEFAULT_NUM_CARDS_PER_HAND = 5;
 
 export const DEFAULT_NUM_HANDS_PER_GAME = 25;
+
+export const DEFAULT_NUM_CARDS_REVEALED = 3;
 
 export interface Cards {
   [key: string]: Card;
@@ -106,7 +108,7 @@ export const JOKER = {
   value: 1,
 };
 
-export const POSSIBLE_HAND_TYPES: Hand = {
+export const POSSIBLE_HAND_TYPES: HandType = {
   HighCard: {
     name: 'High Card',
     value: 1
