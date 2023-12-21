@@ -1,4 +1,4 @@
-import { cloneDeep, random, range, sample, values } from "lodash";
+import { cloneDeep, random, range, sample, values, sampleSize } from "lodash";
 import { Hand, JOKER, MAX_ALLOWED_BID, MIN_ALLOWED_BID } from "./constants";
 import { POSSIBLE_CARDS, POSSIBLE_HAND_TYPES } from "./constants";
 import { Card } from "./constants";
@@ -101,11 +101,9 @@ export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
   }
   
   const sortedHands = hands.sort((h1, h2) => -cmpHand(h1, h2, jokers, cheat));
-  let totalScore = 0;
-  for (let i in sortedHands) {
-    totalScore += sortedHands[i].bid.bid * (i + 1);
-  }
-  return totalScore;
+  return sortedHands.map((h) => h.bid.bid).reduce((acc, bid, i) => {
+    return acc + (i + 1) * bid;
+  }, 0);
 }
 
 export function generateHands(numHands: number, numCardsPerHand: number): Hand[] {
@@ -117,4 +115,8 @@ export function generateHands(numHands: number, numCardsPerHand: number): Hand[]
     key: crypto.randomUUID(),
     cards: range(numCardsPerHand).map(() => sample(values(POSSIBLE_CARDS)) as Card),
   }));
+}
+
+export function randomHandIndices(numCardsRevealed: number, numCardsPerHand: number) {
+  return sampleSize(range(numCardsPerHand), numCardsRevealed);
 }

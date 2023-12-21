@@ -3,12 +3,14 @@ import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import clsx from "clsx";
 import { useDrag, useDrop } from "react-dnd";
 import { Card, Hand } from "../../constants";
+import { range, shuffle } from "lodash";
 
 const BID_DRAG_TYPE = "__bid";
 
 const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
-  const { hands, swapBids, showCards } = useContext(GameStateContext);
+  const { hands, swapBids, showCards, numRevealedCards, numCardsPerHand } = useContext(GameStateContext);
   const [fadeAnimation, setFadeAnimation] = useState<boolean>(false);
+  const [cardRevealOrder, setCardRevealOrder] = useState<number[]>(() => shuffle(range(numCardsPerHand)));
   function enableFade() {
     setFadeAnimation(true);
     setTimeout(() => {
@@ -62,7 +64,7 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
       <span className={clsx("grid-in-index flex flex-row justify-end align-start")}>{index + 1}</span>
       <div className={clsx("flex flex-row")}>
         {hand.cards.map((card, i) => (
-          <CardDisplay key={`${hand.key}_${i}`} card={card} />
+          <CardDisplay key={`${hand.key}_${i}`} card={card} show={cardRevealOrder.slice(0, numRevealedCards).includes(i)} />
         ))}
       </div>
       <div
@@ -82,9 +84,9 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
   );
 };
 
-const CardDisplay = ({ card }: { card: Card }) => {
+const CardDisplay = ({ card, show }: { card: Card, show: boolean }) => {
   const { showCards } = useContext(GameStateContext);
-  return <div className={clsx("")}>{showCards ? card.display : "?"}</div>;
+  return <div className={clsx("")}>{showCards || show ? card.display : "?"}</div>;
 };
 
 export default HandDisplay;

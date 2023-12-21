@@ -1,6 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
 import { Hand } from "../../constants";
-import { DEFAULT_NUM_CARDS_PER_HAND, DEFAULT_NUM_HANDS_PER_GAME } from "../../constants";
+import { DEFAULT_NUM_CARDS_PER_HAND, DEFAULT_NUM_HANDS_PER_GAME, DEFAULT_NUM_CARDS_REVEALED } from "../../constants";
 import { actualScore, generateHands } from "../../gameHelpers";
 import { produce } from "immer";
 
@@ -24,6 +24,8 @@ interface GameState {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   addedScore: number;
   removedScore: number;
+  numRevealedCards: number;
+  setNumRevealedCards: Dispatch<SetStateAction<number>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -46,6 +48,8 @@ const DEFAULT_GAME_STATE: GameState = {
   setModalOpen: () => {},
   addedScore: 0,
   removedScore: 0,
+  numRevealedCards: 0,
+  setNumRevealedCards: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -68,6 +72,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [scoreAddTimeout, setScoreAddTimeout] = useState<ReturnType<typeof setTimeout>>(() => {
     return setTimeout(() => {}, 0);
   });
+  const [numRevealedCards, setNumRevealedCards] = useState<number>(DEFAULT_NUM_CARDS_REVEALED);
   function toggleUseJokers() {
     setUseJokers((x) => !x);
   }
@@ -131,6 +136,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setModalOpen,
         addedScore,
         removedScore,
+        numRevealedCards,
+        setNumRevealedCards,
       }}
     >
       {children}
