@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { maxPossibleScore } from "./gameHelpers";
 import { POSSIBLE_CARDS } from "./constants";
 
-test("max possible score is working", () => {
+test("max possible score works", () => {
   const hands = [
     {
       bid: {
