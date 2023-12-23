@@ -13,6 +13,7 @@ export interface Hand {
   bid: Bid;
   cards: Card[];
   key: string;
+  cardRevealOrder: number[];
 }
 
 export interface HandType {
@@ -26,7 +27,7 @@ export const MAX_ALLOWED_BID = 100;
 
 export const DEFAULT_NUM_CARDS_PER_HAND = 5;
 
-export const DEFAULT_NUM_HANDS_PER_GAME = 25;
+export const DEFAULT_NUM_HANDS_PER_GAME = 2;
 
 export const DEFAULT_NUM_CARDS_REVEALED = 3;
 
@@ -108,34 +109,37 @@ export const JOKER = {
   value: 1,
 };
 
-export const POSSIBLE_HAND_TYPES: HandType = {
+interface PossibleHands {
+  [key: string]: HandType;
+}
+
+export const POSSIBLE_HAND_TYPES: PossibleHands = {
   HighCard: {
-    name: 'High Card',
-    value: 1
+    name: "High Card",
+    value: 1,
   },
   OnePair: {
-    name: 'One Pair',
-    value: 2
+    name: "One Pair",
+    value: 2,
   },
   TwoPair: {
-    name: 'Two Pair',
-    value: 3
+    name: "Two Pair",
+    value: 3,
   },
   ThreeKind: {
-    name: 'Three of a Kind',
-    value: 4
+    name: "Three of a Kind",
+    value: 4,
   },
   FullHouse: {
-    name: 'Full House',
-    value: 5
+    name: "Full House",
+    value: 5,
   },
   FourKind: {
-    name: 'Four of a Kind',
-    value: 6
+    name: "Four of a Kind",
+    value: 6,
   },
   FiveKind: {
-    name: 'Five of a Kind',
-    value: 7
+    name: "Five of a Kind",
+    value: 7,
   },
-
-}
+};

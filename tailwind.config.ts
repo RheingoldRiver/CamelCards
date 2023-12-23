@@ -17,6 +17,7 @@ export default {
           900: "#653622",
           950: "#391c0f",
         },
+        goldStar: "#FFFF66",
       },
       gridTemplateAreas: {
         game: ["board bids", "actions bids", "prefs prefs"],
