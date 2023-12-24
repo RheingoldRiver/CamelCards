@@ -26,7 +26,7 @@ function counter(values: Card[]) {
   }, {});
 }
 
-function defaultHandType(hand: Card[]) {
+function handType(hand: Card[]) {
   const valueCounts = Object.values(counter(hand)).sort((a, b) => b - a);
   switch (valueCounts[0]) {
     case 5:
@@ -50,43 +50,33 @@ function defaultHandType(hand: Card[]) {
   }
 }
 
-function getHandScore(cards: Card[], jokers: boolean, cheat: boolean) {
-  if (jokers) {
-    const valueCounts = counter(cards);
-    let [maxKey, maxValue] = [JOKER.name, 0];
-    Object.keys(valueCounts).forEach((card) => {
-      if (valueCounts[card] > maxValue && card !== JOKER.name) {
-        [maxKey, maxValue] = [card, valueCounts[card]];
-      }
-    });
-    cards = cards.map((card) => {
-      if (card.name === JOKER.name) {
-        return POSSIBLE_CARDS[maxKey];
-      }
-      return card;
-    });
-  }
-  const handType = defaultHandType(cards);
-
-  let handScore;
-  if (cheat) {
-    handScore = cheatScore(cards);
-  } else {
-    handScore = defaultScore(cards);
-  }
-  return handType.value * 10e8 + handScore;
+function getHandScore(cards: Card[], cheat: boolean) {
+  const valueCounts = counter(cards);
+  let [maxKey, maxValue] = [JOKER.name, 0];
+  Object.keys(valueCounts).forEach((card) => {
+    if (valueCounts[card] > maxValue && card !== JOKER.name) {
+      [maxKey, maxValue] = [card, valueCounts[card]];
+    }
+  });
+  const substitutedCards = cards.map((card) => {
+    if (card.name === JOKER.name) {
+      return POSSIBLE_CARDS[maxKey];
+    }
+    return card;
+  });
+  return handType(substitutedCards).value * 10e8 + (cheat ? cheatScore(cards) : defaultScore(cards));
 }
 
 export function getSortedHands(hands: Hand[], jokers: boolean, cheat: boolean) {
   hands = cloneDeep(hands);
   if (jokers) {
-    hands.forEach((hand, i) => {
-      hands[i].cards = hand.cards.map((c) => (c.name === POSSIBLE_CARDS.Jack.name ? JOKER : c));
+    hands.forEach((hand) => {
+      hand.cards = hand.cards.map((c) => (c.name === POSSIBLE_CARDS.Jack.name ? JOKER : c));
     });
   }
 
   return hands.sort((h1, h2) => {
-    return getHandScore(h1.cards, jokers, cheat) - getHandScore(h2.cards, jokers, cheat);
+    return getHandScore(h1.cards, cheat) - getHandScore(h2.cards, cheat);
   });
 }
 
