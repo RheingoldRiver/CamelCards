@@ -35,6 +35,12 @@ export interface Cards {
   [key: string]: Card;
 }
 
+export const JOKER = {
+  name: "Joker",
+  display: "J",
+  value: 1,
+};
+
 export const POSSIBLE_CARDS: Cards = {
   Ace: {
     name: "Ace",
@@ -101,12 +107,23 @@ export const POSSIBLE_CARDS: Cards = {
     display: "2",
     value: 2,
   },
+  Joker: JOKER,
 };
 
-export const JOKER = {
-  name: "Joker",
-  display: "J",
-  value: 1,
+export const TEST_CARD_MAP = {
+  A: POSSIBLE_CARDS.Ace,
+  K: POSSIBLE_CARDS.King,
+  Q: POSSIBLE_CARDS.Queen,
+  J: POSSIBLE_CARDS.Jack,
+  T: POSSIBLE_CARDS.Ten,
+  ["9"]: POSSIBLE_CARDS.Nine,
+  ["8"]: POSSIBLE_CARDS.Eight,
+  ["7"]: POSSIBLE_CARDS.Seven,
+  ["6"]: POSSIBLE_CARDS.Six,
+  ["5"]: POSSIBLE_CARDS.Five,
+  ["4"]: POSSIBLE_CARDS.Four,
+  ["3"]: POSSIBLE_CARDS.Three,
+  ["2"]: POSSIBLE_CARDS.Two,
 };
 
 interface PossibleHands {

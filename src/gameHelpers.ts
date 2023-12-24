@@ -1,5 +1,5 @@
-import { cloneDeep, random, range, sample, values, sampleSize, shuffle } from "lodash";
-import { Hand, JOKER, MAX_ALLOWED_BID, MIN_ALLOWED_BID } from "./constants";
+import { cloneDeep, random, range, sample, values, sampleSize, shuffle, toNumber } from "lodash";
+import { Hand, JOKER, MAX_ALLOWED_BID, MIN_ALLOWED_BID, TEST_CARD_MAP } from "./constants";
 import { POSSIBLE_CARDS, POSSIBLE_HAND_TYPES } from "./constants";
 import { Card } from "./constants";
 
@@ -17,19 +17,13 @@ function defaultScore(hand: Card[]) {
 }
 
 function cheatScore(hand: Card[]) {
-  return defaultScore([...hand].sort((a, b) => a.value - b.value));
+  return defaultScore([...hand].sort((a, b) => b.value - a.value));
 }
 
 function counter(values: Card[]) {
-  const count: { [key: string]: number } = {};
-  values.forEach((value) => {
-    if (value.name in count) {
-      count[value.name]++;
-    } else {
-      count[value.name] = 1;
-    }
-  });
-  return count;
+  return values.reduce((acc: { [key: string]: number }, val) => {
+    return { ...acc, [val.name]: 1 + (acc[val.name] ?? 0) };
+  }, {});
 }
 
 function defaultHandType(hand: Card[]) {
@@ -56,32 +50,23 @@ function defaultHandType(hand: Card[]) {
   }
 }
 
-function jokerHandType(cards: Card[]) {
-  const valueCounts = counter(cards);
-  let [maxKey, maxValue] = [JOKER.name, 0];
-  Object.keys(valueCounts).forEach((card) => {
-    if (valueCounts[card] > maxValue && card !== JOKER.name) {
-      [maxKey, maxValue] = [card, valueCounts[card]];
-    }
-  });
-
-  cards = [...cards];
-  cards.forEach((_, i) => {
-    if (cards[i] === JOKER) {
-      cards[i] = POSSIBLE_CARDS[maxKey];
-    }
-  });
-
-  return defaultHandType(cards);
-}
-
 function getHandScore(cards: Card[], jokers: boolean, cheat: boolean) {
-  let handType;
   if (jokers) {
-    handType = jokerHandType(cards);
-  } else {
-    handType = defaultHandType(cards);
+    const valueCounts = counter(cards);
+    let [maxKey, maxValue] = [JOKER.name, 0];
+    Object.keys(valueCounts).forEach((card) => {
+      if (valueCounts[card] > maxValue && card !== JOKER.name) {
+        [maxKey, maxValue] = [card, valueCounts[card]];
+      }
+    });
+    cards = cards.map((card) => {
+      if (card.name === JOKER.name) {
+        return POSSIBLE_CARDS[maxKey];
+      }
+      return card;
+    });
   }
+  const handType = defaultHandType(cards);
 
   let handScore;
   if (cheat) {
@@ -89,13 +74,7 @@ function getHandScore(cards: Card[], jokers: boolean, cheat: boolean) {
   } else {
     handScore = defaultScore(cards);
   }
-  console.log(cards, handType, handScore);
-  console.log(handType.value * 10e8 + handScore);
   return handType.value * 10e8 + handScore;
-}
-
-function cmpHand(hand1: Hand, hand2: Hand, jokers: boolean, cheat: boolean) {
-  return getHandScore(hand1.cards, jokers, cheat) - getHandScore(hand2.cards, jokers, cheat);
 }
 
 export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
@@ -106,7 +85,10 @@ export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
     });
   }
 
-  const sortedHands = hands.sort((h1, h2) => cmpHand(h1, h2, jokers, cheat));
+  const sortedHands = hands.sort((h1, h2) => {
+    return getHandScore(h1.cards, jokers, cheat) - getHandScore(h2.cards, jokers, cheat);
+  });
+
   return sortedHands
     .map((h) => h.bid.bid)
     .reduce((acc, bid, i) => {
@@ -128,4 +110,18 @@ export function generateHands(numHands: number, numCardsPerHand: number): Hand[]
 
 export function randomHandIndices(numCardsRevealed: number, numCardsPerHand: number) {
   return sampleSize(range(numCardsPerHand), numCardsRevealed);
+}
+
+export function testStringToHand(s: string) {
+  const [cards, bid] = s.split(" ");
+  console.log(cards.split(""));
+  return {
+    bid: {
+      bid: toNumber(bid),
+      key: crypto.randomUUID(),
+    },
+    cards: cards.split("").map((c) => TEST_CARD_MAP[c as keyof typeof TEST_CARD_MAP]),
+    cardRevealOrder: range(cards.length),
+    key: crypto.randomUUID(),
+  };
 }
