@@ -21,6 +21,8 @@ function PreferencesToolbar() {
     setNumCardsPerHand,
     numHandsPerGame,
     setNumHandsPerGame,
+    showCurrentScore,
+    setShowCurrentScore,
   } = useContext(GameStateContext);
   const [curNumRevealedCards, setCurNumRevealedCards] = useState<number>(numRevealedCards);
   const [curNumCardsPerHand, setCurNumCardsPerHand] = useState<number>(numCardsPerHand);
@@ -58,6 +60,22 @@ function PreferencesToolbar() {
       >
         <ToggleStatus status={allowCheat} />
         Cheat?
+      </Toggle.Root>
+      <Toggle.Root
+        className={clsx(
+          "bg-sand-400 p-2 rounded-xl whitespace-nowrap",
+          "hover:bg-sand-800 hover:text-white hover:shadow-lg hover shadow-sand-800",
+          "mx-2",
+          "min-h-10",
+          "inline-flex flex-row items-center"
+        )}
+        aria-label="Toggle jokers"
+        pressed={showCurrentScore}
+        onPressedChange={setShowCurrentScore}
+        title="Simulate subtly sorting each hand"
+      >
+        <ToggleStatus status={showCurrentScore} />
+        Show score?
       </Toggle.Root>
 
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "min-h-10  whitespace-nowrap")}>

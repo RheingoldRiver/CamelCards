@@ -28,6 +28,8 @@ interface GameState {
   removedScore: number;
   numRevealedCards: number;
   setNumRevealedCards: Dispatch<SetStateAction<number>>;
+  showCurrentScore: boolean;
+  setShowCurrentScore: Dispatch<SetStateAction<boolean>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -54,6 +56,8 @@ const DEFAULT_GAME_STATE: GameState = {
   removedScore: 0,
   numRevealedCards: 0,
   setNumRevealedCards: () => {},
+  showCurrentScore: false,
+  setShowCurrentScore: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -63,6 +67,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [numHandsPerGame, setNumHandsPerGame] = useState<number>(DEFAULT_NUM_HANDS_PER_GAME);
   const [allowCheat, setAllowCheat] = useState<boolean>(false);
   const [showCards, setShowCards] = useState<boolean>(false);
+  const [showCurrentScore, setShowCurrentScore] = useState<boolean>(true);
   const [scores, setScores] = useState<number[]>([]);
   const [maxPossibleScores, setMaxPossibleScores] = useState<number[]>([]);
   const [hands, setHands] = useState<Hand[]>(() => {
@@ -133,6 +138,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         toggleAllowCheat,
         showCards,
         setShowCards,
+        showCurrentScore,
+        setShowCurrentScore,
         hands,
         scores,
         setScores,

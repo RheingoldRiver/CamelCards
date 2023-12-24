@@ -21,6 +21,7 @@ const GameActions: FC<Props> = () => {
     removedScore,
     maxPossibleScores,
     setMaxPossibleScores,
+    showCurrentScore,
   } = useContext(GameStateContext);
   const yourTotalScore = scores.reduce((acc, s) => acc + s, 0);
   const maxTotalScore = maxPossibleScores.reduce((acc, s) => acc + s, 0);
@@ -30,23 +31,25 @@ const GameActions: FC<Props> = () => {
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
         Total score: {yourTotalScore} ({totalScorePct}%)
       </span>
-      <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
-        <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
-          {removedScore > 0 && (
-            <AnimatedScoreChange translation={10} show={removedScore}>
-              ---
-            </AnimatedScoreChange>
-          )}
+      {showCurrentScore && (
+        <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
+          <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
+            {removedScore > 0 && (
+              <AnimatedScoreChange translation={10} show={removedScore}>
+                ---
+              </AnimatedScoreChange>
+            )}
+          </span>
+          Current score: {actualScore(hands, useJokers, allowCheat)}{" "}
+          <span className={clsx("absolute top-[-14px] right-[-10px] text-green-800 bold", "text-2xl")}>
+            {addedScore > 0 && (
+              <AnimatedScoreChange translation={-10} show={addedScore}>
+                +++
+              </AnimatedScoreChange>
+            )}
+          </span>
         </span>
-        Current score: {actualScore(hands, useJokers, allowCheat)}{" "}
-        <span className={clsx("absolute top-[-14px] right-[-10px] text-green-800 bold", "text-2xl")}>
-          {addedScore > 0 && (
-            <AnimatedScoreChange translation={-10} show={addedScore}>
-              +++
-            </AnimatedScoreChange>
-          )}
-        </span>
-      </span>
+      )}
       <Toolbar.Button
         className={clsx(
           showCards ? "bg-sand-300 text-sand-100" : "bg-sand-400",
