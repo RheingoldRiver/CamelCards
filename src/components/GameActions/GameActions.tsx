@@ -1,7 +1,7 @@
 import { useContext, type FC, ReactNode } from "react";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
-import { actualScore } from "../../gameHelpers";
+import { actualScore, maxPossibleScore } from "../../gameHelpers";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 
@@ -11,7 +11,6 @@ const GameActions: FC<Props> = () => {
   const {
     scores,
     setScores,
-    newHands,
     showCards,
     setShowCards,
     hands,
@@ -20,11 +19,16 @@ const GameActions: FC<Props> = () => {
     setModalOpen,
     addedScore,
     removedScore,
+    maxPossibleScores,
+    setMaxPossibleScores,
   } = useContext(GameStateContext);
+  const yourTotalScore = scores.reduce((acc, s) => acc + s, 0);
+  const maxTotalScore = maxPossibleScores.reduce((acc, s) => acc + s, 0);
+  const totalScorePct = maxTotalScore === 0 ? 0 : ((yourTotalScore / maxTotalScore) * 100).toFixed(2);
   return (
-    <Toolbar.Root className="my-2" aria-label="Formatting options">
+    <Toolbar.Root className="my-2 flex flex-row flex-wrap justify-start items-center gap-y-2">
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
-        Total score: {scores.reduce((acc, s) => acc + s, 0)}
+        Total score: {yourTotalScore} ({totalScorePct}%)
       </span>
       <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
         <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
@@ -51,14 +55,14 @@ const GameActions: FC<Props> = () => {
           "mx-2",
           "h-10"
         )}
-        style={{ marginLeft: "auto" }}
         onClick={() => {
-          setModalOpen(true);
           if (showCards) return;
+          setModalOpen(true);
           setShowCards(true);
           setScores([...scores, actualScore(hands, useJokers, allowCheat)]);
-          newHands();
+          setMaxPossibleScores([...maxPossibleScores, maxPossibleScore(hands)]);
         }}
+        title={showCards ? "Generate new hands to play again!" : undefined}
       >
         Play game with these bids!
       </Toolbar.Button>

@@ -27,9 +27,13 @@ export const MAX_ALLOWED_BID = 100;
 
 export const DEFAULT_NUM_CARDS_PER_HAND = 5;
 
-export const DEFAULT_NUM_HANDS_PER_GAME = 2;
+export const DEFAULT_NUM_HANDS_PER_GAME = 25;
 
 export const DEFAULT_NUM_CARDS_REVEALED = 3;
+
+export const MAX_NUM_CARDS_PER_HAND = 20;
+
+export const MAX_NUM_HANDS_PER_GAME = 100;
 
 export interface Cards {
   [key: string]: Card;

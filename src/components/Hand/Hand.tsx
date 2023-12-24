@@ -6,7 +6,7 @@ import { Card, Hand } from "../../constants";
 
 const BID_DRAG_TYPE = "__bid";
 
-const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
+const HandDisplay = ({ hand, index, rank }: { hand: Hand; index: number; rank: number }) => {
   const { hands, swapBids, showCards, numRevealedCards } = useContext(GameStateContext);
   const [fadeAnimation, setFadeAnimation] = useState<boolean>(false);
   function enableFade() {
@@ -62,10 +62,10 @@ const HandDisplay = ({ hand, index }: { hand: Hand; index: number }) => {
       <span
         className={clsx(
           "grid-in-index flex flex-row justify-end align-start",
-          "text-goldStar [-webkit-text-stroke:1px_navy]"
+          showCards ? "" : "text-goldStar [-webkit-text-stroke:1px_navy]"
         )}
       >
-        ★
+        {showCards ? rank : "★"}
       </span>
       <div className={clsx("flex flex-row")}>
         {hand.cards.map((card, i) => (

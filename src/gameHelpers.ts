@@ -77,7 +77,7 @@ function getHandScore(cards: Card[], jokers: boolean, cheat: boolean) {
   return handType.value * 10e8 + handScore;
 }
 
-export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
+export function getSortedHands(hands: Hand[], jokers: boolean, cheat: boolean) {
   hands = cloneDeep(hands);
   if (jokers) {
     hands.forEach((hand, i) => {
@@ -85,11 +85,17 @@ export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
     });
   }
 
-  const sortedHands = hands.sort((h1, h2) => {
+  return hands.sort((h1, h2) => {
     return getHandScore(h1.cards, jokers, cheat) - getHandScore(h2.cards, jokers, cheat);
   });
+}
 
-  return sortedHands
+export function getSortedKeys(hands: Hand[], jokers: boolean, cheat: boolean) {
+  return getSortedHands(hands, jokers, cheat).map((h) => h.key);
+}
+
+export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
+  return getSortedHands(hands, jokers, cheat)
     .map((h) => h.bid.bid)
     .reduce((acc, bid, i) => {
       return acc + (i + 1) * bid;
@@ -114,7 +120,6 @@ export function randomHandIndices(numCardsRevealed: number, numCardsPerHand: num
 
 export function testStringToHand(s: string) {
   const [cards, bid] = s.split(" ");
-  console.log(cards.split(""));
   return {
     bid: {
       bid: toNumber(bid),

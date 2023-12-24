@@ -18,6 +18,8 @@ interface GameState {
   hands: Hand[];
   scores: number[];
   setScores: Dispatch<SetStateAction<number[]>>;
+  maxPossibleScores: number[];
+  setMaxPossibleScores: Dispatch<SetStateAction<number[]>>;
   newHands: () => void;
   swapBids: (i1: number, i2: number) => void;
   modalOpen: boolean;
@@ -42,6 +44,8 @@ const DEFAULT_GAME_STATE: GameState = {
   hands: [],
   scores: [],
   setScores: () => {},
+  maxPossibleScores: [],
+  setMaxPossibleScores: () => {},
   newHands: () => {},
   swapBids: () => {},
   modalOpen: false,
@@ -60,6 +64,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [allowCheat, setAllowCheat] = useState<boolean>(false);
   const [showCards, setShowCards] = useState<boolean>(false);
   const [scores, setScores] = useState<number[]>([]);
+  const [maxPossibleScores, setMaxPossibleScores] = useState<number[]>([]);
   const [hands, setHands] = useState<Hand[]>(() => {
     return generateHands(numHandsPerGame, numCardsPerHand);
   });
@@ -131,6 +136,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         hands,
         scores,
         setScores,
+        maxPossibleScores,
+        setMaxPossibleScores,
         newHands,
         swapBids,
         modalOpen,
