@@ -103,12 +103,12 @@ export function actualScore(hands: Hand[], jokers: boolean, cheat: boolean) {
 }
 
 export function generateHands(numHands: number, numCardsPerHand: number): Hand[] {
-  return range(numHands).map(() => ({
+  return range(numHands).map((i) => ({
     bid: {
       bid: random(MIN_ALLOWED_BID, MAX_ALLOWED_BID),
-      key: crypto.randomUUID(),
+      key: i.toString(),
     },
-    key: crypto.randomUUID(),
+    key: i.toString(),
     cards: range(numCardsPerHand).map(() => sample(values(POSSIBLE_CARDS)) as Card),
     cardRevealOrder: shuffle(range(numCardsPerHand)),
   }));
@@ -123,10 +123,10 @@ export function testStringToHand(s: string) {
   return {
     bid: {
       bid: toNumber(bid),
-      key: crypto.randomUUID(),
+      key: bid,
     },
     cards: cards.split("").map((c) => TEST_CARD_MAP[c as keyof typeof TEST_CARD_MAP]),
     cardRevealOrder: range(cards.length),
-    key: crypto.randomUUID(),
+    key: bid,
   };
 }
