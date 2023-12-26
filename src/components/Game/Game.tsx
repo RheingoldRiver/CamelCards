@@ -8,10 +8,10 @@ function Game() {
     <div className="grid grid-areas-game w-full h-full">
       <div className="grid-in-board">
         <GameOverModal />
-        <Board></Board>
         <GameActions></GameActions>
+        <Board></Board>
       </div>
-      <div className="grid-in-prefs">
+      <div className="grid-in-prefs mt-2">
         <PreferencesToolbar />
       </div>
     </div>

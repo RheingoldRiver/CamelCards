@@ -28,12 +28,25 @@ const GameActions: FC<Props> = () => {
   const totalScorePct = maxTotalScore === 0 ? 0 : ((yourTotalScore / maxTotalScore) * 100).toFixed(2);
   return (
     <Toolbar.Root className="my-2 flex flex-row flex-wrap justify-start items-center gap-y-2">
-      <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10")}>
+      <span
+        className={clsx(
+          "flex flex-row items-center border-dashed border-4 border-sand-400 p-2 rounded-xl",
+          "mx-2",
+          "h-10"
+        )}
+      >
         Total score: {yourTotalScore} ({totalScorePct}%)
       </span>
       {showCurrentScore && (
-        <span className={clsx("bg-sand-400 p-2 rounded-xl", "mx-2", "h-10", "relative")}>
-          <span className={clsx("absolute bottom-[-10px] left-[-10px] text-red-800 bold", "text-3xl")}>
+        <span
+          className={clsx(
+            "flex flex-row items-center border-dashed border-4 border-sand-400 p-2 rounded-xl",
+            "mx-2",
+            "h-10",
+            "relative"
+          )}
+        >
+          <span className={clsx("absolute bottom-[-20px] left-[-10px] text-red-800 bold", "text-4xl")}>
             {removedScore > 0 && (
               <AnimatedScoreChange translation={10} show={removedScore}>
                 ---
@@ -41,7 +54,7 @@ const GameActions: FC<Props> = () => {
             )}
           </span>
           Current score: {actualScore(hands, useJokers, allowCheat)}{" "}
-          <span className={clsx("absolute top-[-14px] right-[-10px] text-green-800 bold", "text-2xl")}>
+          <span className={clsx("absolute top-[-25px] right-[-10px] text-green-800 bold", "text-4xl")}>
             {addedScore > 0 && (
               <AnimatedScoreChange translation={-10} show={addedScore}>
                 +++
