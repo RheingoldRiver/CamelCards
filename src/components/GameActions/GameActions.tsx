@@ -35,7 +35,7 @@ const GameActions: FC<Props> = () => {
           "h-10"
         )}
       >
-        Total score: {yourTotalScore} ({totalScorePct}%)
+        Total score: <span className="font-bold mx-1">{yourTotalScore}</span> ({totalScorePct}%)
       </span>
       {showCurrentScore && (
         <span
@@ -53,7 +53,7 @@ const GameActions: FC<Props> = () => {
               </AnimatedScoreChange>
             )}
           </span>
-          Current score: {actualScore(hands, useJokers, allowCheat)}{" "}
+          Current score: <span className="font-bold">{actualScore(hands, useJokers, allowCheat)}</span>
           <span className={clsx("absolute top-[-25px] right-[-10px] text-green-800 bold", "text-4xl")}>
             {addedScore > 0 && (
               <AnimatedScoreChange translation={-10} show={addedScore}>

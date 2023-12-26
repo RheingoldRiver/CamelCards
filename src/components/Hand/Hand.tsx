@@ -67,7 +67,7 @@ const HandDisplay = ({ hand, index, rank }: { hand: Hand; index: number; rank: n
       >
         {showCards ? rank : "★"}
       </span>
-      <div className={clsx("flex flex-row")}>
+      <div className={clsx("flex flex-row gap-[.07rem]")}>
         {hand.cards.map((card, i) => (
           <CardDisplay
             key={`${hand.key}_${i}`}
@@ -88,7 +88,7 @@ const HandDisplay = ({ hand, index, rank }: { hand: Hand; index: number; rank: n
           transition: fadeAnimation ? "background 2000ms, transform 500ms" : "transform 250ms",
         }}
       >
-        Bid: {hand.bid.bid}
+        Bid: <span className="font-semibold">{hand.bid.bid}</span>
       </div>
     </div>
   );
@@ -96,7 +96,7 @@ const HandDisplay = ({ hand, index, rank }: { hand: Hand; index: number; rank: n
 
 const CardDisplay = ({ card, show }: { card: Card; show: boolean }) => {
   const { showCards } = useContext(GameStateContext);
-  return <div className={clsx("")}>{showCards || show ? card.display : "?"}</div>;
+  return <div className={clsx("text-lg")}>{showCards || show ? card.display : "?"}</div>;
 };
 
 export default HandDisplay;
